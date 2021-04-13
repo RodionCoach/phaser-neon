@@ -1,0 +1,83 @@
+{
+	"textures": [
+		{
+			"image": "gui.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 445,
+				"h": 190
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "lose_message.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 188,
+						"h": 188
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 188,
+						"h": 188
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 188,
+						"h": 188
+					}
+				},
+				{
+					"filename": "time.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 70,
+						"h": 58
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 13,
+						"w": 70,
+						"h": 32
+					},
+					"frame": {
+						"x": 191,
+						"y": 1,
+						"w": 70,
+						"h": 32
+					}
+				},
+				{
+					"filename": "win_message.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 182,
+						"h": 184
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 181,
+						"h": 182
+					},
+					"frame": {
+						"x": 263,
+						"y": 1,
+						"w": 181,
+						"h": 182
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:4590db2777f8d78ffea94406ed1f449e:866ee1a3e17af861818afd9c0c39fb44:788b34ed4e778d63c84b2c3df4d44949$"
+	}
+}
