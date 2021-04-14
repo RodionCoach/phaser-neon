@@ -2,6 +2,7 @@ import { DEPTH_LAYERS, GAME_RESOLUTION, SOUND_BUTTON_POSITION } from "utils/cons
 import { BUTTON_STYLE } from "utils/styles";
 import SoundButton from "objects/soundButton";
 import { GUIContainer } from "objects/guiContainer";
+import { createRectangleHitArea } from "../utils/createRectangleHitArea";
 
 class PauseScene extends Phaser.Scene {
   soundControl: SoundButton;
@@ -29,7 +30,7 @@ class PauseScene extends Phaser.Scene {
       .setName("containerButton")
       .setDepth(DEPTH_LAYERS.one);
 
-    const distanceBetweenButtons = 25;
+    const distanceBetweenButtons = -15;
 
     const buttonRestart = new GUIContainer({
       scene: this,
@@ -47,6 +48,7 @@ class PauseScene extends Phaser.Scene {
         this.RestartGame();
       },
     });
+    createRectangleHitArea(buttonRestart.sprite, 20, 20);
     containerButton.add(buttonRestart);
 
     const buttonResume = new GUIContainer({
@@ -65,6 +67,7 @@ class PauseScene extends Phaser.Scene {
         this.ResumeGame();
       },
     });
+    createRectangleHitArea(buttonResume.sprite, 20, 20);
     containerButton.add(buttonResume);
 
     const buttonReturn = new GUIContainer({
@@ -83,6 +86,7 @@ class PauseScene extends Phaser.Scene {
         this.ReturnToMainMenu();
       },
     });
+    createRectangleHitArea(buttonReturn.sprite, 20, 20);
     containerButton.add(buttonReturn);
   }
 

@@ -1,10 +1,10 @@
 import ExampleContainer from "./ExampleContainer";
 import { exampleGenerator } from "utils/generators/numbers";
-import { numbersArrayGenerator } from "utils/generators/numbersArrayGenerator";
+import { SetAudio } from "sceneHooks/SetAudio";
 import { TOTAL_EXAMPLES, DEPTH_LAYERS } from "utils/constants";
 import { EXAMPLES_STYLE } from "utils/styles";
-import { shuffle } from "utils/shuffle";
 import { RandomPlacePluginType, ILevelConfig } from "typings/types";
+import { createRectangleHitArea } from "../../utils/createRectangleHitArea";
 
 export default class ExampleSpawner extends Phaser.GameObjects.GameObject {
   order: number;
@@ -21,7 +21,7 @@ export default class ExampleSpawner extends Phaser.GameObjects.GameObject {
     this.examples = Array.from({ length: TOTAL_EXAMPLES }, () => {
       const exampleContainer: ExampleContainer = new ExampleContainer(scene, 0, 0);
       exampleContainer.setDepth(DEPTH_LAYERS.two);
-      exampleContainer.sprite.setTexture("planets", "disappearance/planet5/0001.png");
+      exampleContainer.sprite.setTexture("objects", "disappearance/object4/0001.png");
       exampleContainer.textObject.setStyle(EXAMPLES_STYLE).setOrigin(0.5, 0.5).setPosition(0, 0);
       exampleContainer.sprite.on(
         Phaser.Animations.Events.ANIMATION_COMPLETE,
@@ -50,33 +50,46 @@ export default class ExampleSpawner extends Phaser.GameObjects.GameObject {
     }
     this.order = 0;
     const examples = exampleGenerator(this.levelConfig);
-    const randArrayForPlanetSprite = shuffle(numbersArrayGenerator(5));
     this.examples.forEach((exampleContainer, index) => {
       if (examples[index]) {
         exampleContainer.id = examples[index].id;
         exampleContainer.setVisible(true);
-        exampleContainer.planetTextureNumber = randArrayForPlanetSprite[index];
+        exampleContainer.ObjectTextureNumber = this.CalculateObjectTextureNumber(examples[index].text);
         exampleContainer.textObject.setText(examples[index].text);
         exampleContainer.sprite.anims.play({
-          key: `appearancePlanet${exampleContainer.planetTextureNumber}`,
+          key: `appearanceObject${exampleContainer.ObjectTextureNumber}`,
         });
         exampleContainer.sprite.removeListener("pointerdown");
-        const shape = new Phaser.Geom.Circle(exampleContainer.sprite.width / 2, exampleContainer.sprite.height / 2, 60);
-        exampleContainer.sprite
-          .setInteractive({ hitArea: shape, hitAreaCallback: Phaser.Geom.Circle.Contains, useHandCursor: true })
-          .on("pointerdown", () => {
-            if (this.CheckOrder(examples[index].id)) {
-              exampleContainer.textObject.setVisible(false);
-              exampleContainer.sprite.anims.play({
-                key: `disappearancePlanet${exampleContainer.planetTextureNumber}`,
-              });
-            }
-          });
+        exampleContainer.sprite.setInteractive({ useHandCursor: true }).on("pointerdown", () => {
+          if (this.CheckOrder(examples[index].id)) {
+            exampleContainer.sprite.disableInteractive();
+            exampleContainer.textObject.setVisible(false);
+            exampleContainer.sprite.anims.play({
+              key: `disappearanceObject${exampleContainer.ObjectTextureNumber}`,
+            });
+            SetAudio(this.scene, "click", 0.2);
+          }
+        });
+        createRectangleHitArea(exampleContainer.sprite, 15, 15);
       } else {
         exampleContainer.setVisible(false);
       }
     });
     this.SetExamplesRandomPosition();
+  }
+
+  CalculateObjectTextureNumber(string: string) {
+    if (string.length <= 2) {
+      return 1;
+    } else if (string.length <= 3) {
+      return 2;
+    } else if (string.length <= 5) {
+      return 3;
+    } else if (string.length <= 6) {
+      return 4;
+    } else {
+      return 4;
+    }
   }
 
   SetExamplesRandomPosition() {
@@ -101,24 +114,24 @@ export default class ExampleSpawner extends Phaser.GameObjects.GameObject {
   }
 
   CreateAnimations(scene: Phaser.Scene) {
-    for (let i = 1; i < 6; i += 1) {
-      const frameNamesAppearance = scene.anims.generateFrameNames("planets", {
+    for (let i = 1; i < 5; i += 1) {
+      const frameNamesAppearance = scene.anims.generateFrameNames("objects", {
+        start: 1,
+        end: 4,
+        zeroPad: 4,
+        prefix: `appearance/object${i}/`,
+        suffix: ".png",
+      });
+      scene.anims.create({ key: `appearanceObject${i}`, frames: frameNamesAppearance, frameRate: 20, repeat: 0 });
+
+      const frameNamesDisappearance = scene.anims.generateFrameNames("objects", {
         start: 1,
         end: 6,
         zeroPad: 4,
-        prefix: `appearance/planet${i}/`,
+        prefix: `disappearance/object${i}/`,
         suffix: ".png",
       });
-      scene.anims.create({ key: `appearancePlanet${i}`, frames: frameNamesAppearance, frameRate: 20, repeat: 0 });
-
-      const frameNamesDisappearance = scene.anims.generateFrameNames("planets", {
-        start: 1,
-        end: 8,
-        zeroPad: 4,
-        prefix: `disappearance/planet${i}/`,
-        suffix: ".png",
-      });
-      scene.anims.create({ key: `disappearancePlanet${i}`, frames: frameNamesDisappearance, frameRate: 20, repeat: 0 });
+      scene.anims.create({ key: `disappearanceObject${i}`, frames: frameNamesDisappearance, frameRate: 20, repeat: 0 });
     }
   }
 }

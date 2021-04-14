@@ -1,5 +1,4 @@
 import { GAME_RESOLUTION } from "utils/constants";
-import { COUNTDOWN_STYLE } from "utils/styles";
 
 class CountdownScene extends Phaser.Scene {
   constructor() {
@@ -10,14 +9,19 @@ class CountdownScene extends Phaser.Scene {
 
   create() {
     this.add.image(0, 0, "backgroundSecondary").setOrigin(0);
+    this.add
+      .shader("pannerShader", GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height, GAME_RESOLUTION.width, 350, [
+        "back_grid",
+      ])
+      .setOrigin(0.5, 1.0);
 
     let count = 3;
 
-    const halfScreenWidth = GAME_RESOLUTION.width / 2;
-    const halfScreenHeight = GAME_RESOLUTION.height / 2;
-    const countdownText = this.add.text(0, 0, `${count}`, COUNTDOWN_STYLE);
-    countdownText.setPosition(halfScreenWidth, halfScreenHeight).setOrigin(0.5, 0.5);
-    countdownText.setScale(0.4, 0.4);
+    const countdownText = this.add
+      .image(GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height / 2, "count", `${count}.png`)
+      .setOrigin(0.5, 0.5)
+      .setScale(0.8, 0.8);
+
     this.tweens.add({
       targets: countdownText,
       props: {
@@ -37,7 +41,7 @@ class CountdownScene extends Phaser.Scene {
           ease: "Quad.easeInOut",
         },
         scaleX: {
-          value: "1.0",
+          value: "2.0",
           duration: 500,
           yoyo: true,
           repeat: 0,
@@ -45,7 +49,7 @@ class CountdownScene extends Phaser.Scene {
           ease: "Quad.easeInOut",
         },
         scaleY: {
-          value: "1.0",
+          value: "2.0",
           duration: 500,
           yoyo: true,
           repeat: 0,
@@ -56,7 +60,7 @@ class CountdownScene extends Phaser.Scene {
       loop: count - 1,
       onLoop: () => {
         count -= 1;
-        countdownText.setText(`${count}`);
+        countdownText.setTexture("count", `${count}.png`);
       },
       onComplete: () => {
         this.scene.stop("CountdownScene");

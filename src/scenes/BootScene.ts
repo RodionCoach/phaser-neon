@@ -25,25 +25,30 @@ class BootScene extends Phaser.Scene {
       this.scene.start("StartScene");
     });
 
-    this.load.multiatlas("planets", `${PATH_SPRITES}/planets/planets.json`, `${PATH_SPRITES}/planets`);
+    this.load.multiatlas("objects", `${PATH_SPRITES}/objects/objects.json`, `${PATH_SPRITES}/objects`);
     this.load.multiatlas("buttonBackground", `${PATH_SPRITES}/button/button.json`, `${PATH_SPRITES}/button`);
     this.load.multiatlas("volume", `${PATH_SPRITES}/button/volume.json`, `${PATH_SPRITES}/button`);
     this.load.multiatlas("gui", `${PATH_SPRITES}/gui/gui.json`, `${PATH_SPRITES}/gui`);
-    this.load.multiatlas("sun", `${PATH_SPRITES}/sun/sun.json`, `${PATH_SPRITES}/sun`);
+    this.load.multiatlas("count", `${PATH_SPRITES}/count/count.json`, `${PATH_SPRITES}/count`);
     this.load.image("backgroundGame", "./assets/img/Back_background.png");
     this.load.image("backgroundPrimary", "./assets/img/Back_background_primary.png");
     this.load.image("backgroundSecondary", "./assets/img/Back_background_secondary.png");
     this.load.image("backgroundRules", "./assets/img/Back_background_card.png");
     this.load.image("backgroundScore", "./assets/img/Back_background_score.png");
     this.load.image("pause", "./assets/img/pause.png");
+    this.load.image("score", "./assets/img/score.png");
+    this.load.image("back_grid", "./assets/img/back_grid.png");
+    this.load.image("rocks", "./assets/img/rocks.png");
+    this.load.image("sun", "./assets/img/sun.png");
+    this.load.image("sunGrid", "./assets/img/sun_grid.png");
 
-    this.load.audio("background", "./assets/sounds/background.mp3");
-    this.load.audio("solved", "./assets/sounds/solved_problem.mp3");
-    this.load.audio("wrong", "./assets/sounds/wrong_answer.mp3");
-    this.load.audio("missed", "./assets/sounds/missed_problem.mp3");
-    this.load.audio("gameOver", "./assets/sounds/end_of_the_game.mp3");
-    this.load.audio("ufoBeam", "./assets/sounds/ufo_beam.mp3");
+    this.load.audio("background", "./assets/sounds/space_back.mp3");
+    this.load.audio("solved", "./assets/sounds/correct.mp3");
+    this.load.audio("wrong", "./assets/sounds/wrong.mp3");
+    this.load.audio("gameOver", "./assets/sounds/end.mp3");
+    this.load.audio("click", "./assets/sounds/click_on_object.mp3");
 
+    this.load.glsl("pannerShader", "./assets/shaders/panner.glsl");
     this.load.glsl("sunShader", "./assets/shaders/sun.glsl");
 
     this.load.rexWebFont({
