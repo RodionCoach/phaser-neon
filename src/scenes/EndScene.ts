@@ -1,4 +1,4 @@
-import { DEPTH_LAYERS, GAME_RESOLUTION, SOUND_BUTTON_POSITION } from "utils/constants";
+import { DEPTH_LAYERS, GAME_RESOLUTION, SOUND_BUTTON_POSITION, SCORE_GRADIENT } from "utils/constants";
 import { BUTTON_STYLE, SCORE_TITLE_STYLE, SCORE_NUMBERS_STYLE, SCORE_TEXT_STYLE } from "utils/styles";
 import { SetAudio } from "sceneHooks/SetAudio";
 import SoundButton from "objects/soundButton";
@@ -55,7 +55,7 @@ class EndScene extends Phaser.Scene {
     const scoreText = this.add
       .text(0, -135, `${this.currentScore}`, SCORE_NUMBERS_STYLE)
       .setOrigin(0.5)
-      .setTint(0xfea7ff, 0x0078f3, 0xfd71f9, 0x1be3ff);
+      .setTint(SCORE_GRADIENT.topLeft, SCORE_GRADIENT.topRight, SCORE_GRADIENT.bottomLeft, SCORE_GRADIENT.bottomRight);
     container.add(scoreText);
     const bestScoreText = this.add.text(0, -55, this.IsBestScore(), SCORE_TEXT_STYLE).setOrigin(0.5);
     container.add(bestScoreText);

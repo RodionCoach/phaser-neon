@@ -36,6 +36,13 @@ export const GAME_HEALTH_POINTS = 5;
 
 export const PATH_SPRITES = "./assets/sprites";
 
+export const SCORE_GRADIENT = {
+  topLeft: 0xfea7ff,
+  topRight: 0x0078f3,
+  bottomLeft: 0xfd71f9,
+  bottomRight: 0x1be3ff,
+};
+
 export const LEVELS = {
   level0: {
     numbersAmount: 3,
