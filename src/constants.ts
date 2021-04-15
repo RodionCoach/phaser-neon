@@ -1,4 +1,5 @@
-export const BACKGROUND_COLOR = "#85C7EA";
+export const BACKGROUND_COLOR = "#FFFAFA";
+export const LOADER_FILL_COLOR = 0xff0000;
 
 export const GAME_RESOLUTION = {
   width: 800,

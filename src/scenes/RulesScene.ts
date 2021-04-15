@@ -4,7 +4,7 @@ import {
   TEXT_AREA_CONFIG_FOR_RULES,
   DEPTH_LAYERS,
   SOUND_BUTTON_POSITION,
-} from "utils/constants";
+} from "../constants";
 import { BUTTON_STYLE, RULES_STYLE } from "utils/styles";
 import SoundButton from "objects/soundButton";
 import { GUIContainer } from "objects/guiContainer";

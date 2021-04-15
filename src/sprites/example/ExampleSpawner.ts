@@ -1,11 +1,11 @@
 import ExampleContainer from "./ExampleContainer";
 import { exampleGenerator } from "utils/generators/numbers";
 import { SetAudio } from "sceneHooks/SetAudio";
-import { TOTAL_EXAMPLES, DEPTH_LAYERS } from "utils/constants";
+import { TOTAL_EXAMPLES, DEPTH_LAYERS } from "../../constants";
 import { EXAMPLES_STYLE } from "utils/styles";
 import { RandomPlacePluginType, ILevelConfig } from "typings/types";
 import { createRectangleHitArea } from "utils/createRectangleHitArea";
-import { calculateObjectTextureNumber } from "utils/сalculateObjectTextureNumber";
+import calculateObjectTextureNumber from "utils/calculateObjectTexture";
 
 export default class ExampleSpawner extends Phaser.GameObjects.GameObject {
   order: number;
@@ -68,7 +68,7 @@ export default class ExampleSpawner extends Phaser.GameObjects.GameObject {
             exampleContainer.sprite.anims.play({
               key: `disappearanceObject${exampleContainer.objectTextureNumber}`,
             });
-            SetAudio(this.scene, "click", 0.2);
+            SetAudio(this.scene, "click", 0.4);
           }
         });
         createRectangleHitArea(exampleContainer.sprite, 15, 15);

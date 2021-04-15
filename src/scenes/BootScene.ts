@@ -1,4 +1,4 @@
-import { PATH_SPRITES } from "utils/constants";
+import { PATH_SPRITES, LOADER_FILL_COLOR } from "../constants";
 
 class BootScene extends Phaser.Scene {
   constructor() {
@@ -7,21 +7,18 @@ class BootScene extends Phaser.Scene {
     });
   }
   preload() {
-    const progressBox = this.add.graphics();
     const progress = this.add.graphics();
 
     // Register a load progress event to show a load bar
     this.load.on("progress", (value: number) => {
       progress.clear();
-      progressBox.fillStyle(0xfffffff, 0.8);
-      progress.fillStyle(0xffffff, 1);
+      progress.fillStyle(LOADER_FILL_COLOR, 1);
       progress.fillRect(0, +this.sys.game.config.height / 2, +this.sys.game.config.width * value, 60);
     });
 
     // Register a load complete event to launch the title screen when all files are loaded
     this.load.on("complete", () => {
       progress.destroy();
-      progressBox.destroy();
       this.scene.start("StartScene");
     });
 

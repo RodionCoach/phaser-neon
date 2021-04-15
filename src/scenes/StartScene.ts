@@ -1,4 +1,4 @@
-import { DEPTH_LAYERS, GAME_RESOLUTION, SOUND_BUTTON_POSITION } from "utils/constants";
+import { DEPTH_LAYERS, GAME_RESOLUTION, SOUND_BUTTON_POSITION } from "../constants";
 import { createRectangleHitArea } from "utils/createRectangleHitArea";
 import { BUTTON_STYLE } from "utils/styles";
 import { SetAudio } from "sceneHooks/SetAudio";

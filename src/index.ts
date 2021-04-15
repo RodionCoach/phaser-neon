@@ -9,7 +9,7 @@ import EndScene from "scenes/EndScene";
 import WebFontLoaderPlugin from "phaser3-rex-plugins/plugins/webfontloader-plugin.js";
 import RandomPlacePlugin from "phaser3-rex-plugins/plugins/randomplace-plugin.js";
 
-import { GAME_RESOLUTION, BACKGROUND_COLOR } from "./utils/constants";
+import { GAME_RESOLUTION, BACKGROUND_COLOR } from "./constants";
 
 const config = {
   type: Phaser.WEBGL,

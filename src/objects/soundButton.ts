@@ -1,5 +1,5 @@
 import { ToggleAudio } from "sceneHooks/ToggleAudio";
-import { DEPTH_LAYERS } from "utils/constants";
+import { DEPTH_LAYERS } from "../constants";
 import { IToggleAudioConfig } from "typings/types";
 
 interface SoundButtonConfig extends IToggleAudioConfig {

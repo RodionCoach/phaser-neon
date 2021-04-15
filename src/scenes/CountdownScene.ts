@@ -1,4 +1,4 @@
-import { GAME_RESOLUTION } from "utils/constants";
+import { GAME_RESOLUTION } from "../constants";
 
 class CountdownScene extends Phaser.Scene {
   constructor() {

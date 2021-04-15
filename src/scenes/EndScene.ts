@@ -1,4 +1,4 @@
-import { DEPTH_LAYERS, GAME_RESOLUTION, SOUND_BUTTON_POSITION, SCORE_GRADIENT } from "utils/constants";
+import { DEPTH_LAYERS, GAME_RESOLUTION, SOUND_BUTTON_POSITION, SCORE_GRADIENT } from "../constants";
 import { BUTTON_STYLE, SCORE_TITLE_STYLE, SCORE_NUMBERS_STYLE, SCORE_TEXT_STYLE } from "utils/styles";
 import { SetAudio } from "sceneHooks/SetAudio";
 import SoundButton from "objects/soundButton";
@@ -98,7 +98,7 @@ class EndScene extends Phaser.Scene {
     createRectangleHitArea(buttonReturn.sprite, 20, 20);
     container.add(buttonReturn);
 
-    SetAudio(this, "gameOver", 1.0, false);
+    SetAudio(this, "gameOver", 0.5, false);
   }
 
   IsBestScore() {
