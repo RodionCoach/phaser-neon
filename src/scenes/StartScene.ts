@@ -1,4 +1,5 @@
-import { DEPTH_LAYERS, GAME_RESOLUTION, SOUND_BUTTON_POSITION } from "utils/constants";
+import { DEPTH_LAYERS, GAME_RESOLUTION, SOUND_BUTTON_POSITION } from "../constants";
+import { createRectangleHitArea } from "utils/createRectangleHitArea";
 import { BUTTON_STYLE } from "utils/styles";
 import { SetAudio } from "sceneHooks/SetAudio";
 import SoundButton from "objects/soundButton";
@@ -32,11 +33,13 @@ class StartScene extends Phaser.Scene {
       .setName("containerButton")
       .setDepth(DEPTH_LAYERS.one);
 
+    const distanceBetweenButtons = 40;
+
     const newGameButton = new GUIContainer({
       scene: this,
       name: "newGameButton",
       x: 0,
-      y: -50,
+      y: -distanceBetweenButtons,
       text: "NEW GAME",
       textStyle: BUTTON_STYLE,
       texture: "buttonBackground",
@@ -48,13 +51,14 @@ class StartScene extends Phaser.Scene {
         this.StartGame();
       },
     });
+    createRectangleHitArea(newGameButton.sprite, 20, 20);
     containerButton.add(newGameButton);
 
     const rulesGameButton = new GUIContainer({
       scene: this,
       name: "rulesGameButton",
       x: 0,
-      y: 50,
+      y: distanceBetweenButtons,
       text: "HOW TO PLAY",
       textStyle: BUTTON_STYLE,
       texture: "buttonBackground",
@@ -66,9 +70,10 @@ class StartScene extends Phaser.Scene {
         this.HowToPlay();
       },
     });
+    createRectangleHitArea(rulesGameButton.sprite, 20, 20);
     containerButton.add(rulesGameButton);
 
-    SetAudio(this, "background", 1.0, true);
+    SetAudio(this, "background", 0.5, true);
   }
 
   StartGame() {

@@ -1,12 +1,6 @@
 import ExampleSpawner from "sprites/example/ExampleSpawner";
 import { SetAudio } from "sceneHooks/SetAudio";
-import {
-  GAME_RESOLUTION,
-  GAME_HEALTH_POINTS,
-  DEPTH_LAYERS,
-  SOUND_BUTTON_POSITION,
-  OBJECTS_NUMBER_PER_LEVEL,
-} from "utils/constants";
+import { GAME_RESOLUTION, GAME_HEALTH_POINTS, DEPTH_LAYERS, SOUND_BUTTON_POSITION, LEVELS } from "../constants";
 import { SCORE_LABEL_STYLE, TIMER_STYLE, SCORE_STYLE, PTS_STYLE } from "utils/styles";
 import SoundButton from "objects/soundButton";
 import { IScore } from "typings/types";
@@ -52,6 +46,15 @@ class GameScene extends Phaser.Scene {
     });
 
     this.add.image(0, 0, "backgroundGame").setOrigin(0).setDepth(DEPTH_LAYERS.zero);
+    this.add
+      .shader("sunShader", GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height, 430, 430, ["sun", "sunGrid"])
+      .setOrigin(0.5, 1.0);
+    this.add.image(0, 470, "rocks").setOrigin(0, 1.0).setDepth(DEPTH_LAYERS.zero);
+    this.add
+      .shader("pannerShader", GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height, GAME_RESOLUTION.width, 260, [
+        "back_grid",
+      ])
+      .setOrigin(0.5, 0.5);
     this.loseMessage = this.add
       .image(GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height / 2, "gui", "lose_message.png")
       .setOrigin(0.5, 0.5)
@@ -70,29 +73,7 @@ class GameScene extends Phaser.Scene {
       .text(GAME_RESOLUTION.width / 2, 25, "2:00", TIMER_STYLE)
       .setOrigin(0.5, 0)
       .setDepth(DEPTH_LAYERS.three);
-
-    this.add
-      .shader("sunShader", GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height, GAME_RESOLUTION.width, 120)
-      .setOrigin(0.5, 1.0);
-    this.add
-      .image(0, GAME_RESOLUTION.height, "sun", "sun.png")
-      .setOrigin(0, 1.0)
-      .setDepth(DEPTH_LAYERS.three).alpha = 0.85;
-    this.add
-      .image(0, GAME_RESOLUTION.height, "sun", "score.png")
-      .setAngle(-10.0)
-      .setOrigin(0, 1.0)
-      .setDepth(DEPTH_LAYERS.three);
-
-    this.add
-      .shader("sunShader", GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height, GAME_RESOLUTION.width, 120)
-      .setOrigin(0.5, 1.0);
-    this.add.image(0, GAME_RESOLUTION.height, "sun", "sun.png").setOrigin(0, 1.0).setDepth(DEPTH_LAYERS.three);
-    this.add
-      .image(0, GAME_RESOLUTION.height, "sun", "score.png")
-      .setAngle(-10.0)
-      .setOrigin(0, 1.0)
-      .setDepth(DEPTH_LAYERS.three).alpha = 0.75;
+    this.add.image(0, 369, "score").setOrigin(0).setDepth(DEPTH_LAYERS.three);
 
     this.initialTime = 120;
     const timer = this.time.addEvent({
@@ -110,18 +91,17 @@ class GameScene extends Phaser.Scene {
       loop: true,
     });
 
-    this.plusPts = this.add.text(71, 458, "", PTS_STYLE).setOrigin(1).setDepth(DEPTH_LAYERS.three).setVisible(false);
-    this.add.text(20, 398, "Score", SCORE_LABEL_STYLE).setOrigin(0).setDepth(DEPTH_LAYERS.three);
+    this.plusPts = this.add.text(60, 503, "", PTS_STYLE).setOrigin(1).setDepth(DEPTH_LAYERS.three).setVisible(false);
+    this.add.text(9, 443, "Score", SCORE_LABEL_STYLE).setOrigin(0).setDepth(DEPTH_LAYERS.three);
 
     this.sound.add("background");
     this.sound.add("wrong");
-    this.sound.add("missed");
     this.sound.add("solved");
-    this.sound.add("ufoBeam");
+    this.sound.add("click");
 
     this.SpawnObjects();
     this.SetScore();
-    SetAudio(this, "background", 0.4, true);
+    SetAudio(this, "background", 0.5, true);
   }
 
   FormatTime(seconds: number) {
@@ -144,27 +124,17 @@ class GameScene extends Phaser.Scene {
   }
 
   SpawnObjects() {
-    this.exampleSpawner = new ExampleSpawner(this, OBJECTS_NUMBER_PER_LEVEL.level2);
+    this.exampleSpawner = new ExampleSpawner(this, LEVELS.level4);
     this.exampleSpawner.orderEventEmitter.on("rightOrder", () => {
       this.UpdateScore(100);
       this.SetAnswer(this.winMessage, this.exampleSpawner);
+      SetAudio(this, "solved", 0.5);
     });
     this.exampleSpawner.orderEventEmitter.on("wrongOrder", () => {
       this.SetAnswer(this.loseMessage, this.exampleSpawner);
+      SetAudio(this, "wrong", 0.5);
     });
     this.exampleSpawner.GetExample();
-  }
-
-  PlaySolvedSound() {
-    this.sound.get("solved").play();
-  }
-
-  PlayWrongSound() {
-    this.sound.get("wrong").play();
-  }
-
-  PlayMissedSound() {
-    this.sound.get("missed").play({ volume: 0.5 });
   }
 
   SetScore() {
@@ -172,8 +142,8 @@ class GameScene extends Phaser.Scene {
       pts: 0,
       textObject: this.make
         .text({
-          x: 70,
-          y: 425,
+          x: 59,
+          y: 470,
           text: "0",
           origin: {
             x: 1,

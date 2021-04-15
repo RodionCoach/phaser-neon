@@ -8,15 +8,6 @@ export const BUTTON_STYLE = {
   align: "center",
 };
 
-export const COUNTDOWN_STYLE = {
-  fontFamily: "Lato",
-  fontSize: "720px",
-  fontWeight: "900",
-  fontStyle: "bold",
-  fill: "#A779FE",
-  align: "center",
-};
-
 export const RULES_STYLE = {
   fontFamily: "Lato",
   fontSize: "17px",
@@ -44,11 +35,13 @@ export const SCORE_TITLE_STYLE = {
 
 export const SCORE_NUMBERS_STYLE = {
   fontFamily: "Lato",
-  fontSize: "48px",
+  fontSize: "64px",
   fontWeight: "900",
   fontStyle: "bold",
   lineSpacing: 4,
-  fill: "#7BF8FF",
+  fill: "#00000000",
+  stroke: "#FFFFFF",
+  strokeThickness: 3,
   align: "center",
 };
 
@@ -120,6 +113,6 @@ export const SCORE_LABEL_STYLE = {
   fontFamily: "Lato",
   fontWeight: "700",
   fontStyle: "bold",
-  color: "#FDA510",
+  color: "#74E3FF",
   align: "center",
 };

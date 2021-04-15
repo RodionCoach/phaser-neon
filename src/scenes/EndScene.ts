@@ -1,9 +1,10 @@
-import { DEPTH_LAYERS, GAME_RESOLUTION, SOUND_BUTTON_POSITION } from "utils/constants";
+import { DEPTH_LAYERS, GAME_RESOLUTION, SOUND_BUTTON_POSITION, SCORE_GRADIENT } from "../constants";
 import { BUTTON_STYLE, SCORE_TITLE_STYLE, SCORE_NUMBERS_STYLE, SCORE_TEXT_STYLE } from "utils/styles";
 import { SetAudio } from "sceneHooks/SetAudio";
 import SoundButton from "objects/soundButton";
 import { GUIContainer } from "objects/guiContainer";
 import { IInitData } from "typings/types";
+import { createRectangleHitArea } from "utils/createRectangleHitArea";
 
 class EndScene extends Phaser.Scene {
   currentScore: number;
@@ -38,17 +39,25 @@ class EndScene extends Phaser.Scene {
       .setName("container")
       .setDepth(DEPTH_LAYERS.one);
 
-    const distanceBetweenButtons = 20;
-    const buttonGroupPositionY = 95;
+    const distanceBetweenButtons = -15;
+    const buttonGroupPositionY = 75;
 
     this.add.image(0, 0, "backgroundSecondary").setOrigin(0);
-    this.add.image(GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height / 2, "backgroundScore").setOrigin(0.475, 0.5);
+    this.add
+      .shader("pannerShader", GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height, GAME_RESOLUTION.width, 350, [
+        "back_grid",
+      ])
+      .setOrigin(0.5, 1.0);
+    this.add.image(GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height / 2, "backgroundScore").setOrigin(0.5, 0.5);
 
-    const yourScoreText = this.add.text(0, -150, "Your Score", SCORE_TITLE_STYLE).setOrigin(0.5);
+    const yourScoreText = this.add.text(0, -205, "Your Score", SCORE_TITLE_STYLE).setOrigin(0.5);
     container.add(yourScoreText);
-    const scoreText = this.add.text(0, -90, `${this.currentScore}`, SCORE_NUMBERS_STYLE).setOrigin(0.5);
+    const scoreText = this.add
+      .text(0, -135, `${this.currentScore}`, SCORE_NUMBERS_STYLE)
+      .setOrigin(0.5)
+      .setTint(SCORE_GRADIENT.topLeft, SCORE_GRADIENT.topRight, SCORE_GRADIENT.bottomLeft, SCORE_GRADIENT.bottomRight);
     container.add(scoreText);
-    const bestScoreText = this.add.text(0, 0, this.IsBestScore(), SCORE_TEXT_STYLE).setOrigin(0.5);
+    const bestScoreText = this.add.text(0, -55, this.IsBestScore(), SCORE_TEXT_STYLE).setOrigin(0.5);
     container.add(bestScoreText);
 
     const buttonRestart = new GUIContainer({
@@ -67,6 +76,7 @@ class EndScene extends Phaser.Scene {
         this.RestartGame();
       },
     });
+    createRectangleHitArea(buttonRestart.sprite, 20, 20);
     container.add(buttonRestart);
 
     const buttonReturn = new GUIContainer({
@@ -85,9 +95,10 @@ class EndScene extends Phaser.Scene {
         this.ReturnToMainMenu();
       },
     });
+    createRectangleHitArea(buttonReturn.sprite, 20, 20);
     container.add(buttonReturn);
 
-    SetAudio(this, "gameOver", 1.0, false);
+    SetAudio(this, "gameOver", 0.5, false);
   }
 
   IsBestScore() {
