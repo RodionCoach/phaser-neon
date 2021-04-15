@@ -73,7 +73,7 @@ class StartScene extends Phaser.Scene {
     createRectangleHitArea(rulesGameButton.sprite, 20, 20);
     containerButton.add(rulesGameButton);
 
-    SetAudio(this, "background", 1.0, true);
+    SetAudio(this, "background", 0.5, true);
   }
 
   StartGame() {

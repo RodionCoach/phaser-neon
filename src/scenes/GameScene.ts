@@ -75,7 +75,7 @@ class GameScene extends Phaser.Scene {
       .setDepth(DEPTH_LAYERS.three);
     this.add.image(0, 369, "score").setOrigin(0).setDepth(DEPTH_LAYERS.three);
 
-    this.initialTime = 120;
+    this.initialTime = 20;
     const timer = this.time.addEvent({
       delay: 1000,
       callback: () => {
@@ -101,7 +101,7 @@ class GameScene extends Phaser.Scene {
 
     this.SpawnObjects();
     this.SetScore();
-    SetAudio(this, "background", 0.5, true);
+    SetAudio(this, "background", 0.25, true);
   }
 
   FormatTime(seconds: number) {
@@ -128,11 +128,11 @@ class GameScene extends Phaser.Scene {
     this.exampleSpawner.orderEventEmitter.on("rightOrder", () => {
       this.UpdateScore(100);
       this.SetAnswer(this.winMessage, this.exampleSpawner);
-      SetAudio(this, "solved", 0.3);
+      SetAudio(this, "solved", 0.5);
     });
     this.exampleSpawner.orderEventEmitter.on("wrongOrder", () => {
       this.SetAnswer(this.loseMessage, this.exampleSpawner);
-      SetAudio(this, "wrong", 0.1);
+      SetAudio(this, "wrong", 0.5);
     });
     this.exampleSpawner.GetExample();
   }
