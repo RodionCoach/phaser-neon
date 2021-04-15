@@ -31,30 +31,8 @@ export declare const SCORE_GRADIENT: {
     bottomRight: number;
 };
 export declare const LEVELS: {
-    level0: {
-        numbersAmount: number;
-        targetNumber: number;
-        isExpression: boolean;
-    };
-    level1: {
-        numbersAmount: number;
-        targetNumber: number;
-        isExpression: boolean;
-    };
-    level2: {
-        numbersAmount: number;
-        targetNumber: number;
-        isExpression: boolean;
-    };
-    level3: {
-        numbersAmount: number;
-        targetNumber: number;
-        isExpression: boolean;
-    };
-    level4: {
-        numbersAmount: number;
-        targetNumber: number;
-        isExpression: boolean;
-    };
-};
+    numbersAmount: number;
+    targetNumber: number;
+    isExpression: boolean;
+}[];
 export declare const TOTAL_EXAMPLES: number;
