@@ -8,6 +8,7 @@ import CountdownScene from "scenes/CountdownScene";
 import EndScene from "scenes/EndScene";
 import WebFontLoaderPlugin from "phaser3-rex-plugins/plugins/webfontloader-plugin.js";
 import RandomPlacePlugin from "phaser3-rex-plugins/plugins/randomplace-plugin.js";
+import api from "api";
 
 import { GAME_RESOLUTION, BACKGROUND_COLOR } from "./constants";
 
@@ -44,4 +45,6 @@ const config = {
   scene: [BootScene, CountdownScene, StartScene, GameScene, PauseScene, EndScene, RulesScene],
 };
 
-new Phaser.Game(config);
+const game = new Phaser.Game(config);
+
+api.init(game);

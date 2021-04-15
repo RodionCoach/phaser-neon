@@ -1,7 +1,8 @@
 import ExampleSpawner from "sprites/example/ExampleSpawner";
 import { SetAudio } from "sceneHooks/SetAudio";
-import { GAME_RESOLUTION, GAME_HEALTH_POINTS, DEPTH_LAYERS, SOUND_BUTTON_POSITION, LEVELS } from "../constants";
+import { GAME_RESOLUTION, GAME_HEALTH_POINTS, DEPTH_LAYERS, SOUND_BUTTON_POSITION } from "../constants";
 import { SCORE_LABEL_STYLE, TIMER_STYLE, SCORE_STYLE, PTS_STYLE } from "utils/styles";
+import complexitySelector from "utils/selector";
 import SoundButton from "objects/soundButton";
 import { IScore } from "typings/types";
 
@@ -124,7 +125,8 @@ class GameScene extends Phaser.Scene {
   }
 
   SpawnObjects() {
-    this.exampleSpawner = new ExampleSpawner(this, LEVELS.level4);
+    const level = complexitySelector();
+    this.exampleSpawner = new ExampleSpawner(this, level);
     this.exampleSpawner.orderEventEmitter.on("rightOrder", () => {
       this.UpdateScore(100);
       this.SetAnswer(this.winMessage, this.exampleSpawner);

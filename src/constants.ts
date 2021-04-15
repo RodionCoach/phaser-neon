@@ -44,32 +44,32 @@ export const SCORE_GRADIENT = {
   bottomRight: 0x1be3ff,
 };
 
-export const LEVELS = {
-  level0: {
+export const LEVELS = [
+  {
     numbersAmount: 3,
     targetNumber: 5, //from 1 to targetNumber
     isExpression: false,
   },
-  level1: {
+  {
     numbersAmount: 3,
     targetNumber: 10, //from 1 to targetNumber
     isExpression: false,
   },
-  level2: {
+  {
     numbersAmount: 3,
     targetNumber: 120, //from 1 to targetNumber
     isExpression: false,
   },
-  level3: {
+  {
     numbersAmount: 4,
     targetNumber: 1000, //from 1 to targetNumber
     isExpression: false,
   },
-  level4: {
+  {
     numbersAmount: 5,
     targetNumber: 1000, //from 1 to targetNumber
     isExpression: true,
   },
-};
+];
 
-export const TOTAL_EXAMPLES = LEVELS.level4.numbersAmount;
+export const TOTAL_EXAMPLES = LEVELS[4].numbersAmount;
