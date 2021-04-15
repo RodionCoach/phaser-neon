@@ -46,11 +46,6 @@ class GameScene extends Phaser.Scene {
     });
 
     this.add.image(0, 0, "backgroundGame").setOrigin(0).setDepth(DEPTH_LAYERS.zero);
-
-    // this.add
-    //   .image(GAME_RESOLUTION.width / 2, 378, "sun")
-    //   .setOrigin(0.5, 0.5)
-    //   .setDepth(DEPTH_LAYERS.zero);
     this.add
       .shader("sunShader", GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height, 430, 430, ["sun", "sunGrid"])
       .setOrigin(0.5, 1.0);
@@ -78,10 +73,6 @@ class GameScene extends Phaser.Scene {
       .text(GAME_RESOLUTION.width / 2, 25, "2:00", TIMER_STYLE)
       .setOrigin(0.5, 0)
       .setDepth(DEPTH_LAYERS.three);
-
-    // this.add
-    //   .shader("sunShader", GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height, GAME_RESOLUTION.width, 120)
-    //   .setOrigin(0.5, 1.0);
     this.add.image(0, 369, "score").setOrigin(0).setDepth(DEPTH_LAYERS.three);
 
     this.initialTime = 120;

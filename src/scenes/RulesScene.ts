@@ -21,7 +21,11 @@ class RulesScene extends Phaser.Scene {
 
   create() {
     this.add.image(0, 0, "backgroundSecondary").setOrigin(0);
-
+    this.add
+      .shader("pannerShader", GAME_RESOLUTION.width / 2, GAME_RESOLUTION.height, GAME_RESOLUTION.width, 350, [
+        "back_grid",
+      ])
+      .setOrigin(0.5, 1.0);
     this.soundControl = new SoundButton({
       scene: this,
       x: SOUND_BUTTON_POSITION.x,
