@@ -8,5 +8,4 @@ export const createRectangleHitArea = (object: ObjectsType, borderX = 0, borderY
     object.height - borderY * 2,
   );
   object.input.hitAreaCallback = Phaser.Geom.Rectangle.Contains;
-  // object.scene.input.enableDebug(object);
 };

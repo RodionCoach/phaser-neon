@@ -8,7 +8,7 @@ import {
 import { BUTTON_STYLE, RULES_STYLE } from "utils/styles";
 import SoundButton from "objects/soundButton";
 import { GUIContainer } from "objects/guiContainer";
-import { createRectangleHitArea } from "../utils/createRectangleHitArea";
+import { createRectangleHitArea } from "utils/createRectangleHitArea";
 
 class RulesScene extends Phaser.Scene {
   soundControl: SoundButton;

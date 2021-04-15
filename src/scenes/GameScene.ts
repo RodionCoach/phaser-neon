@@ -75,7 +75,7 @@ class GameScene extends Phaser.Scene {
       .setDepth(DEPTH_LAYERS.three);
     this.add.image(0, 369, "score").setOrigin(0).setDepth(DEPTH_LAYERS.three);
 
-    this.initialTime = 20;
+    this.initialTime = 120;
     const timer = this.time.addEvent({
       delay: 1000,
       callback: () => {

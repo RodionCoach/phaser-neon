@@ -4,7 +4,8 @@ import { SetAudio } from "sceneHooks/SetAudio";
 import { TOTAL_EXAMPLES, DEPTH_LAYERS } from "utils/constants";
 import { EXAMPLES_STYLE } from "utils/styles";
 import { RandomPlacePluginType, ILevelConfig } from "typings/types";
-import { createRectangleHitArea } from "../../utils/createRectangleHitArea";
+import { createRectangleHitArea } from "utils/createRectangleHitArea";
+import { calculateObjectTextureNumber } from "utils/сalculateObjectTextureNumber";
 
 export default class ExampleSpawner extends Phaser.GameObjects.GameObject {
   order: number;
@@ -54,10 +55,10 @@ export default class ExampleSpawner extends Phaser.GameObjects.GameObject {
       if (examples[index]) {
         exampleContainer.id = examples[index].id;
         exampleContainer.setVisible(true);
-        exampleContainer.ObjectTextureNumber = this.CalculateObjectTextureNumber(examples[index].text);
+        exampleContainer.objectTextureNumber = calculateObjectTextureNumber(examples[index].text);
         exampleContainer.textObject.setText(examples[index].text);
         exampleContainer.sprite.anims.play({
-          key: `appearanceObject${exampleContainer.ObjectTextureNumber}`,
+          key: `appearanceObject${exampleContainer.objectTextureNumber}`,
         });
         exampleContainer.sprite.removeListener("pointerdown");
         exampleContainer.sprite.setInteractive({ useHandCursor: true }).on("pointerdown", () => {
@@ -65,7 +66,7 @@ export default class ExampleSpawner extends Phaser.GameObjects.GameObject {
             exampleContainer.sprite.disableInteractive();
             exampleContainer.textObject.setVisible(false);
             exampleContainer.sprite.anims.play({
-              key: `disappearanceObject${exampleContainer.ObjectTextureNumber}`,
+              key: `disappearanceObject${exampleContainer.objectTextureNumber}`,
             });
             SetAudio(this.scene, "click", 0.2);
           }
@@ -76,20 +77,6 @@ export default class ExampleSpawner extends Phaser.GameObjects.GameObject {
       }
     });
     this.SetExamplesRandomPosition();
-  }
-
-  CalculateObjectTextureNumber(string: string) {
-    if (string.length <= 2) {
-      return 1;
-    } else if (string.length <= 3) {
-      return 2;
-    } else if (string.length <= 5) {
-      return 3;
-    } else if (string.length <= 6) {
-      return 4;
-    } else {
-      return 4;
-    }
   }
 
   SetExamplesRandomPosition() {
