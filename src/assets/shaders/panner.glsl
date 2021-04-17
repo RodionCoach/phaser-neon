@@ -12,12 +12,6 @@ uniform sampler2D iChannel0;
 
 varying vec2 fragCoord;
 
-vec3 hsv2rgb(vec3 c) {
-  vec4 K = vec4(3. / 3., 2. / 3., 1. / 3., 3.);
-  vec3 p = abs(fract(c.xxx + K.xyz) * 6. - K.www);
-  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
-
 mat4 translate(vec3 v)
 {
   return mat4(
@@ -55,8 +49,6 @@ vec3 grid(vec2 uv)
     d = min(d, sdSegment(uv, a.xy / a.z, b.xy / b.z));
   }
 
-//  float hue = (70. + 150. * sin(radians(15.) * time)) / 360.;
-//  vec3 col = hsv2rgb(vec3(hue, 1., 1.));
   vec3 col = vec3(0.9, 0.5, 0.9);
   return smoothstep(1. / resolution.y, -1. / resolution.y, d - .003) * col;
 }

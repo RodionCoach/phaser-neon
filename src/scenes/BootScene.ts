@@ -27,6 +27,7 @@ class BootScene extends Phaser.Scene {
     this.load.multiatlas("volume", `${PATH_SPRITES}/button/volume.json`, `${PATH_SPRITES}/button`);
     this.load.multiatlas("gui", `${PATH_SPRITES}/gui/gui.json`, `${PATH_SPRITES}/gui`);
     this.load.multiatlas("count", `${PATH_SPRITES}/count/count.json`, `${PATH_SPRITES}/count`);
+    this.load.atlas("flares", `${PATH_SPRITES}/flares/flares.png`, `${PATH_SPRITES}/flares/flares.json`);
     this.load.image("backgroundGame", "./assets/img/Back_background.png");
     this.load.image("backgroundPrimary", "./assets/img/Back_background_primary.png");
     this.load.image("backgroundSecondary", "./assets/img/Back_background_secondary.png");
@@ -47,6 +48,7 @@ class BootScene extends Phaser.Scene {
 
     this.load.glsl("pannerShader", "./assets/shaders/panner.glsl");
     this.load.glsl("sunShader", "./assets/shaders/sun.glsl");
+    this.load.glsl("lineShader", "./assets/shaders/line.glsl");
 
     this.load.rexWebFont({
       google: {

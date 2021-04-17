@@ -25,6 +25,12 @@ export const TEXT_AREA_CONFIG_FOR_RULES = {
   height: 352,
 };
 
+export const PATH_CONFIG = {
+  width: 24,
+  height: 24,
+  numPoints: 127,
+};
+
 export const DEPTH_LAYERS = {
   zero: 0,
   one: 1,

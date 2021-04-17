@@ -1,12 +1,13 @@
 import ExampleSpawner from "sprites/example/ExampleSpawner";
 import { SetAudio } from "sceneHooks/SetAudio";
-import { GAME_RESOLUTION, GAME_HEALTH_POINTS, DEPTH_LAYERS, SOUND_BUTTON_POSITION } from "../constants";
+import { GAME_RESOLUTION, GAME_HEALTH_POINTS, DEPTH_LAYERS, SOUND_BUTTON_POSITION, PATH_CONFIG } from "../constants";
 import { SCORE_LABEL_STYLE, TIMER_STYLE, SCORE_STYLE, PTS_STYLE } from "utils/styles";
 import complexitySelector from "utils/selector";
 import SoundButton from "objects/soundButton";
 import { IScore } from "typings/types";
 
 class GameScene extends Phaser.Scene {
+  startedRopeEffect: boolean;
   currentLifes: number;
   prevHealthPoints: number;
   initialTime: number;
@@ -17,6 +18,11 @@ class GameScene extends Phaser.Scene {
   loseMessage: Phaser.GameObjects.Image;
   soundControl: SoundButton;
   score: IScore;
+  rope: Phaser.GameObjects.Rope;
+  ropePath: Phaser.Curves.Spline;
+  lineShader: Phaser.GameObjects.Shader;
+  particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
+  private interpolatorForPath: { t: number };
 
   constructor() {
     super({
@@ -25,6 +31,7 @@ class GameScene extends Phaser.Scene {
 
     this.currentLifes = GAME_HEALTH_POINTS;
     this.prevHealthPoints = 0;
+    this.startedRopeEffect = false;
   }
 
   create() {
@@ -100,9 +107,73 @@ class GameScene extends Phaser.Scene {
     this.sound.add("solved");
     this.sound.add("click");
 
+    this.lineShader = this.add
+      .shader("lineShader", 0, 0, PATH_CONFIG.width, PATH_CONFIG.height)
+      .setRenderToTexture("line");
+
+    const curve = new Phaser.Curves.Spline([0, 0, 0, 0]);
+    const points = curve.getPoints(1);
+    this.rope = this.add.rope(0, 0, "line", undefined, points, true).setDepth(DEPTH_LAYERS.one);
+
+    const particles = this.add.particles("flares");
+
+    this.particleEmitter = particles.createEmitter({
+      frame: ["red" /*, "blue" , "green", "yellow"*/],
+      speed: { min: -400, max: 400 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 0.25, end: 0 },
+      lifespan: 750,
+      gravityY: 800,
+      quantity: 50,
+      blendMode: "SCREEN",
+    });
+    this.particleEmitter.stop();
+
     this.SpawnObjects();
     this.SetScore();
     SetAudio(this, "background", 0.5, true);
+  }
+
+  SetRope() {
+    this.startedRopeEffect = true;
+    this.lineShader.height = PATH_CONFIG.height;
+    const tmpPoints: number[] = [];
+    tmpPoints.push(450, 120);
+    this.exampleSpawner.examples.forEach(v => {
+      tmpPoints.push(v.y, v.x);
+      this.particleEmitter.explode(50, v.x, v.y);
+    });
+    tmpPoints.reverse();
+    this.ropePath = new Phaser.Curves.Spline(tmpPoints);
+
+    this.interpolatorForPath = { t: 0 };
+
+    this.tweens.add({
+      targets: this.interpolatorForPath,
+      t: 1,
+      ease: "Sine.easeInOut",
+      duration: 400,
+      yoyo: false,
+      repeat: -1,
+    });
+  }
+
+  update() {
+    if (this.startedRopeEffect) {
+      const points = this.ropePath
+        .getPoints(PATH_CONFIG.numPoints)
+        .slice(Math.floor(this.interpolatorForPath.t * PATH_CONFIG.numPoints), PATH_CONFIG.numPoints);
+      if (points.length > 1) {
+        this.rope.setPoints(points);
+        this.lineShader.height =
+          PATH_CONFIG.height *
+          Phaser.Math.Clamp((points.length + PATH_CONFIG.numPoints / 3) / PATH_CONFIG.numPoints, 0.75, 1.2);
+      } else {
+        this.rope.setPoints([new Phaser.Math.Vector2(0, 0), new Phaser.Math.Vector2(0, 0)]);
+        this.startedRopeEffect = false;
+      }
+      this.rope.updateVertices();
+    }
   }
 
   FormatTime(seconds: number) {
@@ -128,6 +199,7 @@ class GameScene extends Phaser.Scene {
     const level = complexitySelector();
     this.exampleSpawner = new ExampleSpawner(this, level);
     this.exampleSpawner.orderEventEmitter.on("rightOrder", () => {
+      this.SetRope();
       this.UpdateScore(100);
       this.SetAnswer(this.winMessage, this.exampleSpawner);
       SetAudio(this, "solved", 0.5);
