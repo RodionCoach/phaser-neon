@@ -138,12 +138,11 @@ class GameScene extends Phaser.Scene {
     this.startedRopeEffect = true;
     this.lineShader.height = PATH_CONFIG.height;
     const tmpPoints: number[] = [];
-    tmpPoints.push(450, 120);
     this.exampleSpawner.examples.forEach(v => {
-      tmpPoints.push(v.y, v.x);
+      tmpPoints.push(v.x, v.y);
       this.particleEmitter.explode(50, v.x, v.y);
     });
-    tmpPoints.reverse();
+    tmpPoints.push(120, 450);
     this.ropePath = new Phaser.Curves.Spline(tmpPoints);
 
     this.interpolatorForPath = { t: 0 };
@@ -152,7 +151,7 @@ class GameScene extends Phaser.Scene {
       targets: this.interpolatorForPath,
       t: 1,
       ease: "Sine.easeInOut",
-      duration: 400,
+      duration: 600,
       yoyo: false,
       repeat: -1,
     });
@@ -160,14 +159,14 @@ class GameScene extends Phaser.Scene {
 
   update() {
     if (this.startedRopeEffect) {
+      const index = Math.floor(this.interpolatorForPath.t * PATH_CONFIG.numPoints);
       const points = this.ropePath
         .getPoints(PATH_CONFIG.numPoints)
-        .slice(Math.floor(this.interpolatorForPath.t * PATH_CONFIG.numPoints), PATH_CONFIG.numPoints);
+        .slice(index, Phaser.Math.Clamp(index + Math.floor(PATH_CONFIG.numPoints / 2), 1, PATH_CONFIG.numPoints));
       if (points.length > 1) {
         this.rope.setPoints(points);
         this.lineShader.height =
-          PATH_CONFIG.height *
-          Phaser.Math.Clamp((points.length + PATH_CONFIG.numPoints / 3) / PATH_CONFIG.numPoints, 0.75, 1.2);
+          PATH_CONFIG.height * Phaser.Math.Clamp(Math.abs(this.interpolatorForPath.t - 1.0) + 0.35, 0.25, 1.0);
       } else {
         this.rope.setPoints([new Phaser.Math.Vector2(0, 0), new Phaser.Math.Vector2(0, 0)]);
         this.startedRopeEffect = false;
