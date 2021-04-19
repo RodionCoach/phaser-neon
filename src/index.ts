@@ -8,6 +8,7 @@ import CountdownScene from "scenes/CountdownScene";
 import EndScene from "scenes/EndScene";
 import WebFontLoaderPlugin from "phaser3-rex-plugins/plugins/webfontloader-plugin.js";
 import RandomPlacePlugin from "phaser3-rex-plugins/plugins/randomplace-plugin.js";
+import GlowFilterPipelinePlugin from "phaser3-rex-plugins/plugins/glowfilterpipeline-plugin.js";
 import api from "api";
 
 import { GAME_RESOLUTION, BACKGROUND_COLOR } from "./constants";
@@ -38,6 +39,11 @@ const config = {
       {
         key: "rexRandomPlace",
         plugin: RandomPlacePlugin,
+        start: true,
+      },
+      {
+        key: "rexGlowFilterPipeline",
+        plugin: GlowFilterPipelinePlugin,
         start: true,
       },
     ],

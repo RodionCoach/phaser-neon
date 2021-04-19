@@ -35,6 +35,7 @@ class BootScene extends Phaser.Scene {
     this.load.image("backgroundScore", "./assets/img/Back_background_score.png");
     this.load.image("pause", "./assets/img/pause.png");
     this.load.image("score", "./assets/img/score.png");
+    this.load.image("blackScore", "./assets/img/blackScore.png");
     this.load.image("back_grid", "./assets/img/back_grid.png");
     this.load.image("rocks", "./assets/img/rocks.png");
     this.load.image("sun", "./assets/img/sun.png");

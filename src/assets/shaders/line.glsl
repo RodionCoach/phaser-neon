@@ -12,10 +12,10 @@ uniform sampler2D iChannel0;
 
 varying vec2 fragCoord;
 
-#define A .5 // Amplitude
+#define A .3 // Amplitude
 #define V 5. // Velocity
-#define W 20. // Wavelength
-#define T .5 // Thickness
+#define W 3. // Wavelength
+#define T .15 // Thickness
 #define S 2.0 // Sharpness
 
 float sine(vec2 p, float o)
@@ -84,7 +84,7 @@ void main(void)
   color = pow(color,2.0);
 
   vec3 totalColor = vec3(color+color2+color3, color*0.7+color2*0.5+color3*0.6, color+color2+color3);
-  totalColor += vec3(sine(pos, time * V)) * totalColor;
+  totalColor += vec3(sine(pos, V)) * totalColor;
   totalColor *= clamp(pow(vUv.x + delta + color * 0.15, 15.0), 0.0, 1.0);
   totalColor *= clamp(pow((1.0 - vUv.x) + delta + color * 0.15, 15.0), 0.0, 1.0);
 

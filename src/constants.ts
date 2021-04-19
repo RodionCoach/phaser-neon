@@ -26,8 +26,8 @@ export const TEXT_AREA_CONFIG_FOR_RULES = {
 };
 
 export const PATH_CONFIG = {
-  width: 32,
-  height: 32,
+  width: 42,
+  height: 42,
   numPoints: 127,
 };
 
