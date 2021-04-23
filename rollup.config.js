@@ -53,7 +53,7 @@ export default {
         open: true,
         contentBase: "build",
         host: "localhost",
-        port: 10002,
+        port: 10001,
         headers: {
           "Access-Control-Allow-Origin": "*",
         },

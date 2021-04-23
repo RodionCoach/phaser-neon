@@ -109,7 +109,7 @@ class GameScene extends Phaser.Scene {
     const postFxPlugin = <GlowPluginType>this.plugins.get("rexGlowFilterPipeline");
     const scoreBackPipeline = postFxPlugin.add(this.scoreBack);
     const scoreLabelPipeline = postFxPlugin.add(scoreLabel);
-    this.scoreBack.glowTask = this.scoreBack.scene.tweens.add({
+    this.scoreBack.glowTask = this.tweens.add({
       targets: [scoreBackPipeline, scoreLabelPipeline],
       intensity: 0.075,
       ease: "Linear",
@@ -130,7 +130,7 @@ class GameScene extends Phaser.Scene {
 
     const curve = new Phaser.Curves.Spline([0, 0, 0, 0]);
     const points = curve.getPoints(1);
-    this.rope = this.add.rope(0, 0, "line", undefined, points, true).setDepth(DEPTH_LAYERS.one);
+    this.rope = this.add.rope(0, 0, "line", "", points, true).setDepth(DEPTH_LAYERS.one);
 
     this.SpawnObjects();
     this.SetScore();
