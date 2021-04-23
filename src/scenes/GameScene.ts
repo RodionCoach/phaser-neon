@@ -137,6 +137,27 @@ class GameScene extends Phaser.Scene {
     SetAudio(this, "background", 0.5, true);
   }
 
+  update() {
+    if (this.startedRopeEffect) {
+      const index = Math.floor(this.interpolatorForPath.t * PATH_CONFIG.numPoints);
+      const factor = Phaser.Math.Clamp(Math.abs(this.interpolatorForPath.t - 1.0) + 0.35, 0.25, 1.0);
+      const points = this.ropePath
+        .getPoints(PATH_CONFIG.numPoints)
+        .slice(
+          index,
+          Phaser.Math.Clamp(index + Math.floor((PATH_CONFIG.numPoints / 2) * factor * 0.75), 1, PATH_CONFIG.numPoints),
+        );
+      if (points.length > 1) {
+        this.rope.setPoints(points);
+        this.lineShader.height = PATH_CONFIG.height * factor;
+      } else {
+        this.rope.setPoints([new Phaser.Math.Vector2(0, 0), new Phaser.Math.Vector2(0, 0)]);
+        this.startedRopeEffect = false;
+      }
+      this.rope.updateVertices();
+    }
+  }
+
   SetRope() {
     this.startedRopeEffect = true;
     this.lineShader.height = PATH_CONFIG.height;
@@ -157,27 +178,6 @@ class GameScene extends Phaser.Scene {
       yoyo: false,
       repeat: -1,
     });
-  }
-
-  update() {
-    if (this.startedRopeEffect) {
-      const index = Math.floor(this.interpolatorForPath.t * PATH_CONFIG.numPoints);
-      const factor = Phaser.Math.Clamp(Math.abs(this.interpolatorForPath.t - 1.0) + 0.35, 0.25, 1.0);
-      const points = this.ropePath
-        .getPoints(PATH_CONFIG.numPoints)
-        .slice(
-          index,
-          Phaser.Math.Clamp(index + Math.floor((PATH_CONFIG.numPoints / 2) * factor * 0.75), 1, PATH_CONFIG.numPoints),
-        );
-      if (points.length > 1) {
-        this.rope.setPoints(points);
-        this.lineShader.height = PATH_CONFIG.height * factor;
-      } else {
-        this.rope.setPoints([new Phaser.Math.Vector2(0, 0), new Phaser.Math.Vector2(0, 0)]);
-        this.startedRopeEffect = false;
-      }
-      this.rope.updateVertices();
-    }
   }
 
   FormatTime(seconds: number) {
