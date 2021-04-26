@@ -7,6 +7,8 @@ const init = (game: Phaser.Game) => {
     if (e.data.eventName === "setCurrentState") {
       game.registry.set("bestScore", e.data.score);
       game.registry.set("gradingLevel", e.data.gradingLevel);
+      game.input.enabled = !e.data.disabled;
+      game.sound.mute = e.data.disabled;
     }
 
     if (e.data.eventName === "setBestScore") {
