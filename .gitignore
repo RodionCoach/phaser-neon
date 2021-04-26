@@ -15,7 +15,6 @@ node_modules/
 .eslintignore
 
 # Build
-/build
 /npm-debug.log
 
 yarn-error.log
