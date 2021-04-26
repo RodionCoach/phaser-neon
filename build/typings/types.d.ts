@@ -18,8 +18,15 @@ export interface ILevelConfig {
     targetNumber: number;
     isExpression?: boolean;
 }
+export declare type GlowObjectType = {
+    glowTask: Phaser.Tweens.Tween;
+} & Phaser.GameObjects.Image & Phaser.GameObjects.Text;
 export declare type RandomPlacePluginType = {
     randomPlace: Function;
+    start: Function;
+} & BasePlugin;
+export declare type GlowPluginType = {
+    add: (object: GlowObjectType) => {};
     start: Function;
 } & BasePlugin;
 export interface IToggleAudioConfig {

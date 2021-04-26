@@ -1,12 +1,13 @@
 import ExampleSpawner from "sprites/example/ExampleSpawner";
 import { SetAudio } from "sceneHooks/SetAudio";
-import { GAME_RESOLUTION, GAME_HEALTH_POINTS, DEPTH_LAYERS, SOUND_BUTTON_POSITION } from "../constants";
+import { GAME_RESOLUTION, GAME_HEALTH_POINTS, DEPTH_LAYERS, SOUND_BUTTON_POSITION, PATH_CONFIG } from "../constants";
 import { SCORE_LABEL_STYLE, TIMER_STYLE, SCORE_STYLE, PTS_STYLE } from "utils/styles";
 import complexitySelector from "utils/selector";
 import SoundButton from "objects/soundButton";
-import { IScore } from "typings/types";
+import { IScore, GlowPluginType, GlowObjectType } from "typings/types";
 
 class GameScene extends Phaser.Scene {
+  startedRopeEffect: boolean;
   currentLifes: number;
   prevHealthPoints: number;
   initialTime: number;
@@ -17,6 +18,11 @@ class GameScene extends Phaser.Scene {
   loseMessage: Phaser.GameObjects.Image;
   soundControl: SoundButton;
   score: IScore;
+  rope: Phaser.GameObjects.Rope;
+  ropePath: Phaser.Curves.Spline;
+  lineShader: Phaser.GameObjects.Shader;
+  scoreBack: GlowObjectType;
+  private interpolatorForPath: { t: number };
 
   constructor() {
     super({
@@ -25,6 +31,7 @@ class GameScene extends Phaser.Scene {
 
     this.currentLifes = GAME_HEALTH_POINTS;
     this.prevHealthPoints = 0;
+    this.startedRopeEffect = false;
   }
 
   create() {
@@ -74,7 +81,9 @@ class GameScene extends Phaser.Scene {
       .text(GAME_RESOLUTION.width / 2, 25, "2:00", TIMER_STYLE)
       .setOrigin(0.5, 0)
       .setDepth(DEPTH_LAYERS.three);
-    this.add.image(0, 369, "score").setOrigin(0).setDepth(DEPTH_LAYERS.three);
+
+    this.scoreBack = <GlowObjectType>this.add.image(0, 369, "score").setOrigin(0).setDepth(DEPTH_LAYERS.three);
+    this.add.image(0, 386, "blackScore").setOrigin(0).setDepth(DEPTH_LAYERS.three);
 
     this.initialTime = 120;
     const timer = this.time.addEvent({
@@ -92,17 +101,83 @@ class GameScene extends Phaser.Scene {
       loop: true,
     });
 
-    this.plusPts = this.add.text(60, 503, "", PTS_STYLE).setOrigin(1).setDepth(DEPTH_LAYERS.three).setVisible(false);
-    this.add.text(9, 443, "Score", SCORE_LABEL_STYLE).setOrigin(0).setDepth(DEPTH_LAYERS.three);
+    this.plusPts = this.add.text(60, 485, "", PTS_STYLE).setOrigin(1, 0).setDepth(DEPTH_LAYERS.three).setVisible(false);
+    const scoreLabel = <GlowObjectType>(
+      this.add.text(9, 443, "Score", SCORE_LABEL_STYLE).setOrigin(0).setDepth(DEPTH_LAYERS.three)
+    );
+
+    const postFxPlugin = <GlowPluginType>this.plugins.get("rexGlowFilterPipeline");
+    const scoreBackPipeline = postFxPlugin.add(this.scoreBack);
+    const scoreLabelPipeline = postFxPlugin.add(scoreLabel);
+    this.scoreBack.glowTask = this.tweens.add({
+      targets: [scoreBackPipeline, scoreLabelPipeline],
+      intensity: 0.075,
+      ease: "Linear",
+      duration: 250,
+      repeat: 0,
+      yoyo: true,
+    });
+    this.scoreBack.glowTask.stop();
 
     this.sound.add("background");
     this.sound.add("wrong");
     this.sound.add("solved");
     this.sound.add("click");
 
+    this.lineShader = this.add
+      .shader("lineShader", 0, 0, PATH_CONFIG.width, PATH_CONFIG.height)
+      .setRenderToTexture("line");
+
+    const curve = new Phaser.Curves.Spline([0, 0, 0, 0]);
+    const points = curve.getPoints(1);
+    this.rope = this.add.rope(0, 0, "line", "", points, true).setDepth(DEPTH_LAYERS.one);
+
     this.SpawnObjects();
     this.SetScore();
     SetAudio(this, "background", 0.5, true);
+  }
+
+  update() {
+    if (this.startedRopeEffect) {
+      const index = Math.floor(this.interpolatorForPath.t * PATH_CONFIG.numPoints);
+      const factor = Phaser.Math.Clamp(Math.abs(this.interpolatorForPath.t - 1.0) + 0.35, 0.25, 1.0);
+      const points = this.ropePath
+        .getPoints(PATH_CONFIG.numPoints)
+        .slice(
+          index,
+          Phaser.Math.Clamp(index + Math.floor((PATH_CONFIG.numPoints / 2) * factor * 0.75), 1, PATH_CONFIG.numPoints),
+        );
+      if (points.length > 1) {
+        this.rope.setPoints(points);
+        this.lineShader.height = PATH_CONFIG.height * factor;
+      } else {
+        this.rope.setPoints([new Phaser.Math.Vector2(0, 0), new Phaser.Math.Vector2(0, 0)]);
+        this.startedRopeEffect = false;
+      }
+      this.rope.updateVertices();
+    }
+  }
+
+  SetRope() {
+    this.startedRopeEffect = true;
+    this.lineShader.height = PATH_CONFIG.height;
+    const tmpPoints: number[] = [];
+    this.exampleSpawner.examples.forEach(v => {
+      tmpPoints.push(v.x, v.y);
+    });
+    tmpPoints.push(120, 450);
+    this.ropePath = new Phaser.Curves.Spline(tmpPoints);
+
+    this.interpolatorForPath = { t: 0 };
+
+    this.tweens.add({
+      targets: this.interpolatorForPath,
+      t: 1,
+      ease: "Sine.easeInOut",
+      duration: 600,
+      yoyo: false,
+      repeat: -1,
+    });
   }
 
   FormatTime(seconds: number) {
@@ -128,6 +203,7 @@ class GameScene extends Phaser.Scene {
     const level = complexitySelector();
     this.exampleSpawner = new ExampleSpawner(this, level);
     this.exampleSpawner.orderEventEmitter.on("rightOrder", () => {
+      this.SetRope();
       this.UpdateScore(100);
       this.SetAnswer(this.winMessage, this.exampleSpawner);
       SetAudio(this, "solved", 0.5);
@@ -164,6 +240,16 @@ class GameScene extends Phaser.Scene {
     this.score.pts += scores;
     this.score.textObject.setText(`${this.score.pts}`);
     this.plusPts.setText(`+${scores}`).setVisible(true);
+    this.scoreBack.glowTask.restart();
+    this.tweens.add({
+      targets: this.plusPts,
+      scaleX: 1.4,
+      scaleY: 1.4,
+      duration: 200,
+      yoyo: true,
+      ease: "Quad.easeInOut",
+      repeat: 0,
+    });
     this.time.addEvent({
       delay: 1000,
       callback: () => this.plusPts.setVisible(false),

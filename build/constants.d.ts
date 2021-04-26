@@ -15,6 +15,11 @@ export declare const TEXT_AREA_CONFIG_FOR_RULES: {
     width: number;
     height: number;
 };
+export declare const PATH_CONFIG: {
+    width: number;
+    height: number;
+    numPoints: number;
+};
 export declare const DEPTH_LAYERS: {
     zero: number;
     one: number;
